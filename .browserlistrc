@@ -1,0 +1,4 @@
+1% in CN
+android >= 5
+ios >= 9
+not ie <= 11
