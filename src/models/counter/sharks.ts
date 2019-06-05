@@ -7,8 +7,7 @@ export type SharksState = number
 export const sharks = createModel({
   state: 0,
   reducers: {
-    increment: (state: SharksState, payload: number): SharksState =>
-      state + payload,
+    increment: (state: SharksState, payload: number): SharksState => state + payload,
   },
   effects: dispatch => ({
     // TODO: Optional args breaks TypeScript autocomplete (e.g. payload: number = 1)
