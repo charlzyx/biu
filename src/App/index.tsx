@@ -4,7 +4,6 @@ import './index.css';
 import { Home, Dash } from '../Pages';
 
 class App extends Component<{}, {}> {
-
   public render(): ReactNode {
     return (
       <Router>

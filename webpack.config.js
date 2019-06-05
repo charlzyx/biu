@@ -1,18 +1,16 @@
-const os = require('os');
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const DashboardPlugin = require('webpack-dashboard/plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const AutoDllPlugin = require('autodll-webpack-plugin');
-const HappyPack = require('happypack');
-const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
+const threadLoader = require('thread-loader');
 
-const createHappyPlugin = (id, loaders) => new HappyPack({
-  id: id,
-  loaders: loaders,
-  threadPool: happyThreadPool,
-  verbose: process.env.HAPPY_VERBOSE === '1' // make happy more verbose with HAPPY_VERBOSE=1
-});
+threadLoader.warmup({}, [
+  'babel-loader',
+]);
+
 
 module.exports = {
   entry: './src/index.tsx',
@@ -30,7 +28,7 @@ module.exports = {
       {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
-        loader: "happypack/loader?id=happy-babel"
+        use: ['thread-loader', 'babel-loader']
       },
       {
         test: /\.js$/,
@@ -88,12 +86,5 @@ module.exports = {
         ]
       }
     }),
-    createHappyPlugin('happy-babel', [{
-      loader: 'babel-loader',
-      options: {
-        babelrc: true,
-        cacheDirectory: true // 启用缓存
-      }
-    }]),
   ],
 };
