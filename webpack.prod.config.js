@@ -1,15 +1,24 @@
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 const merge = require('webpack-merge');
-// eslint-disable-next-line import/no-extraneous-dependencies
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const cssnano = require('cssnano');
 const webpack = require('webpack');
 const base = require('./webpack.config.js');
 
 module.exports = merge(base, {
   mode: 'production',
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'lib', // 指定公共 bundle 的名称。
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static'
     }),
+    new OptimizeCssAssetsPlugin({
+        cssProcessor: cssnano,
+        cssProcessorOptions: {
+          discardComments: {
+            removeAll: true
+          }
+        }
+    })
   ],
 });

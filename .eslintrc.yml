@@ -1,0 +1,30 @@
+---
+parser: "@typescript-eslint/parser"
+parserOptions:
+  project: "./tsconfig.json"
+extends:
+  - airbnb
+  - plugin:@typescript-eslint/recommended
+  - prettier
+  - prettier/@typescript-eslint
+  - plugin:import/typescript
+plugins:
+- "@typescript-eslint"
+settings:
+  import/parsers:
+    "@typescript-eslint/parser": [.ts, .tsx]
+  import/resolver: webpack
+env:
+  browser: true
+rules:
+  quotes: 2 # 单引号
+  semi: 2 # 句末分号
+  react/button-has-type: 0 # button 标签必须写类型
+  react/jsx-filename-extension: 0
+  react/prefer-stateless-function: 0 # 推荐纯函数写法
+  react/destructuring-assignment: 1 # 推荐用结构写法
+  "@typescript-eslint/explicit-function-return-type": 0 # function 必须声明 return 类型
+  "@typescript-eslint/explicit-member-accessibility": 1 # class 方法前面的 private | public
+  "@typescript-eslint/indent": #  缩进改成2个space
+    - error
+    - 2

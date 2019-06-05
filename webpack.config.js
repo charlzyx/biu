@@ -1,19 +1,41 @@
+const os = require('os');
+const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const DashboardPlugin = require('webpack-dashboard/plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const AutoDllPlugin = require('autodll-webpack-plugin');
+const HappyPack = require('happypack');
+const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
+
+const createHappyPlugin = (id, loaders) => new HappyPack({
+  id: id,
+  loaders: loaders,
+  threadPool: happyThreadPool,
+  verbose: process.env.HAPPY_VERBOSE === '1' // make happy more verbose with HAPPY_VERBOSE=1
+});
 
 module.exports = {
+  entry: './src/index.tsx',
   output: {
     filename: '[name].bundle.js?[hash]',
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.json'],
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    }
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
+        loader: "happypack/loader?id=happy-babel"
+      },
+      {
+        test: /\.js$/,
+        use: ['source-map-loader'],
+        enforce: 'pre',
       },
       {
         test: /\.css$/,
@@ -50,5 +72,28 @@ module.exports = {
     }),
     new DashboardPlugin(),
     new CleanWebpackPlugin(),
+    new AutoDllPlugin({
+      inject: true, // will inject the DLL bundle to index.html
+      debug: true,
+      filename: '[name]_[hash].js',
+      path: './dll',
+      entry: {
+        vendor: [
+          'react',
+          'react-dom',
+          'axios',
+          '@reach/router',
+          '@rematch/core',
+          'immer',
+        ]
+      }
+    }),
+    createHappyPlugin('happy-babel', [{
+      loader: 'babel-loader',
+      options: {
+        babelrc: true,
+        cacheDirectory: true // 启用缓存
+      }
+    }]),
   ],
 };

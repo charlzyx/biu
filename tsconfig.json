@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noImplicitThis": false,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "Node",
+    "module": "es6",
+    "target": "es5",
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["types/*"],
+      "@/*": ["./src/*"],
+    },
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
